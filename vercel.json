@@ -1,1 +1,9 @@
-{"functions":{"api/*.ts":{"runtime":"edge"}}}
+{
+  "version": 2,
+  "builds": [
+    { "src": "api/**/*.ts", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/" }
+  ]
+}
