@@ -14,7 +14,7 @@ function saveDB(data) {
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 }
 
-module.exports = function handler(req, res) {
+module.exports = (req, res) => {
   const db = loadDB();
 
   if (req.method === "GET") {
