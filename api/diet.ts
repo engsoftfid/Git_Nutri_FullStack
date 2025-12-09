@@ -14,7 +14,7 @@ function saveDB(data) {
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 }
 
-module.exports = function handler(req, res) {
+module.exports = (req, res) => {
   const db = loadDB();
 
   if (req.method === "GET") {
@@ -23,6 +23,7 @@ module.exports = function handler(req, res) {
 
   if (req.method === "POST") {
     const newDiet = req.body;
+
     if (!newDiet) {
       return res.status(400).json({ error: "Corpo da requisição vazio." });
     }
