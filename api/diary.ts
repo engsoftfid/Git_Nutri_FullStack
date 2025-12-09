@@ -1,5 +1,4 @@
-import fs from "fs";
-import path from "path";
+export default function handler(req: any, res: any) {
 
 // Caminho do arquivo JSON
 const filePath = path.join(process.cwd(), "diary-db.json");
