@@ -14,7 +14,7 @@ function saveDB(data) {
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 }
 
-module.exports = (req, res) => {
+module.exports = function handler(req, res) {
   const db = loadDB();
 
   if (req.method === "GET") {
@@ -24,11 +24,15 @@ module.exports = (req, res) => {
   if (req.method === "POST") {
     const newEntry = req.body;
 
+    if (!newEntry) {
+      return res.status(400).json({ error: "Corpo da requisição vazio." });
+    }
+
     db.diary.push(newEntry);
     saveDB(db);
 
     return res.status(201).json({
-      message: "Entrada adicionada ao diário",
+      message: "Entrada adicionada ao diário!",
       entry: newEntry,
     });
   }
