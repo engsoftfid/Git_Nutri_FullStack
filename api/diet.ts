@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import fs from "fs";
-import path from "path";
+export default function handler(req: any, res: any) {
+
 
 const filePath = path.join(process.cwd(), "diet-db.json");
 
