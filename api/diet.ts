@@ -1,10 +1,9 @@
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import fs from "fs";
 import path from "path";
 
-// Caminho do arquivo JSON
 const filePath = path.join(process.cwd(), "diet-db.json");
 
-// Função para carregar o banco de dados
 function loadDB() {
   if (!fs.existsSync(filePath)) {
     fs.writeFileSync(filePath, JSON.stringify({ diets: [] }, null, 2));
@@ -12,13 +11,11 @@ function loadDB() {
   return JSON.parse(fs.readFileSync(filePath, "utf-8"));
 }
 
-// Função para salvar no banco
 function saveDB(data: any) {
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 }
 
-// Handler da API
-export default function handler(req: any, res: any) {
+export default function handler(req: VercelRequest, res: VercelResponse) {
   const db = loadDB();
 
   if (req.method === "GET") {
@@ -27,13 +24,19 @@ export default function handler(req: any, res: any) {
 
   if (req.method === "POST") {
     const newDiet = req.body;
+
+    if (!newDiet) {
+      return res.status(400).json({ error: "Corpo da requisição vazio." });
+    }
+
     db.diets.push(newDiet);
     saveDB(db);
+
     return res.status(201).json({
       message: "Dieta salva com sucesso!",
-      diet: newDiet,
+      diet: newDiet
     });
   }
 
-  return res.status(405).json({ error: "Método não suportado" });
+  return res.status(405).json({ error: "Método não suportado." });
 }
