@@ -1,4 +1,4 @@
-export const GEMINI_API_KEY = "SUA_CHAVE_AQUI";
+export const GEMINI_API_KEY = "AIzaSyAJfgEDOEc8aUJsQ-2VVvLnNnojseO65LI";
 
 export async function analyzeImage(base64:string){
   return {
