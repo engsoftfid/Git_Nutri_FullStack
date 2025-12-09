@@ -1,28 +1,21 @@
-import { promises as fs } from "fs";
-import path from "path";
+const fs = require("fs");
+const path = require("path");
 
 const filePath = path.join(process.cwd(), "diet-db.json");
 
-// Carregar banco local
-async function loadDB() {
-  try {
-    await fs.access(filePath);
-  } catch {
-    await fs.writeFile(filePath, JSON.stringify({ diets: [] }, null, 2));
+function loadDB() {
+  if (!fs.existsSync(filePath)) {
+    fs.writeFileSync(filePath, JSON.stringify({ diets: [] }, null, 2));
   }
-
-  const data = await fs.readFile(filePath, "utf-8");
-  return JSON.parse(data);
+  return JSON.parse(fs.readFileSync(filePath, "utf-8"));
 }
 
-// Salvar no banco
-async function saveDB(data: any) {
-  await fs.writeFile(filePath, JSON.stringify(data, null, 2));
+function saveDB(data) {
+  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 }
 
-// Handler API
-export default async function handler(req: any, res: any) {
-  const db = await loadDB();
+module.exports = (req, res) => {
+  const db = loadDB();
 
   if (req.method === "GET") {
     return res.status(200).json(db.diets);
@@ -36,7 +29,7 @@ export default async function handler(req: any, res: any) {
     }
 
     db.diets.push(newDiet);
-    await saveDB(db);
+    saveDB(db);
 
     return res.status(201).json({
       message: "Dieta salva com sucesso!",
@@ -45,4 +38,4 @@ export default async function handler(req: any, res: any) {
   }
 
   return res.status(405).json({ error: "Método não suportado." });
-}
+};
